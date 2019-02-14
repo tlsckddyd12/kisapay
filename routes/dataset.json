@@ -1,9 +1,13 @@
 {
   "url" : "https://testapi.open-platform.or.kr/",
+  "redirectURL" : "http://localhost:3000/authReuslt",
+  "APIKey" : "l7xx23d0eab10525490aa3956398ecceaafe",
+  "APISecret" : "dbb0e0d4ccbf4e0a983f21aea94ad3f5",
+
   "name": "홍길동",
-  "serialnum": "0100000001",
   "bankCode": "097",
   "finNum": "101600000169321934052424",
+  "serialnum": "0100000001",
   "loginToken": "074c68d8-37be-4566-9c1a-ae06fff26ef3",
   "quiryToken": "5a965cd7-0ec3-4312-a7aa-dc8da4838e18",
   "transferToken": "f45f904a-c37e-4fb1-a9c9-2c74219f184c"

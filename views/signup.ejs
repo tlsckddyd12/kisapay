@@ -12,37 +12,104 @@
                         <i class="input-icon fa fa-user font-11"></i>
                         <span>이름</span>
                         <em>(필수)</em>
-                        <input type="name" placeholder="사용자 이름">
+                        <input type="name" id="username" placeholder="사용자 이름">
                     </div>
                     <div class="input-style has-icon input-style-1 input-required">
                         <i class="input-icon fa fa-at"></i>
                         <span>Email</span>
                         <em>(필수)</em>
-                        <input type="email" placeholder="이메일 입력">
+                        <input type="email" id="userEmail" placeholder="이메일 입력">
                     </div>
                     <div class="input-style has-icon input-style-1 input-required">
                         <i class="input-icon fa fa-lock font-11"></i>
                         <span>비밀번호</span>
                         <em>(필수)</em>
-                        <input type="password" placeholder="비밀번호 입력">
+                        <input type="password" id="userPwd" placeholder="비밀번호 입력">
+                    </div>
+                    <a id="auth" class="button button-full button-xs shadow-large button-round-small bg-blue1-dark top-10 bottom-0">인증받기</a>
+                    <div class="input-style has-icon input-style-1 input-required">
+                        <i class="input-icon fa fa-lock font-11"></i>
+                        <span>할당된 Access Token</span>
+                        <em></em>
+                        <input id="accessToken" type="text" placeholder="할당된 Access Token">
                     </div>
                     <div class="input-style has-icon input-style-1 input-required">
                         <i class="input-icon fa fa-lock font-11"></i>
-                        <span>비밀번호 확인</span>
-                        <em>(필수)</em>
-                        <input type="password" placeholder="비밀번호 확인">
+                        <span>할당된 refresh Token</span>
+                        <em></em>
+                        <input id="refreshToken" type="text" placeholder="할당된 refresh Token">
                     </div>
-                    <a href="#" class="button button-full button-xs shadow-large button-round-small bg-blue1-dark top-10 bottom-0">인증받기</a>
-
-                    <div class="top-20 bottom-20">
-                        <a href="#" data-menu="menu-signin" class="center-text font-11 color-gray2-dark">이미 가입하셨다면 로그인하세요.</a>
+                    <div class="input-style has-icon input-style-1 input-required">
+                        <i class="input-icon fa fa-lock font-11"></i>
+                        <span>할당된 이용자번호 </span>
+                        <em></em>
+                        <input id="userNum" type="text" placeholder="할당된 이용자번호">
                     </div>
-                    <div class="clear"></div>
-                    <a href="#" class="button button-full button-m shadow-large button-round-small bg-green1-dark top-10 bottom-0">LOGIN</a>
+                      <div class="clear"></div>
+                    <a id="joinBtn" class="button button-full button-m shadow-large button-round-small bg-green1-dark top-10 bottom-0">가입</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    $("#auth").click(function () {
+        invokeAuthorize()
+    })
 
+    $("#joinBtn").click(function () {
+        var input_inputId = $("#userEmail").val();
+        var input_inputName = $("#username").val();
+        var input_inputPwd = $("#userPwd").val();
+
+        var input_userUsingNum = $("#userNum").val();
+        var input_accessToken = $("#accessToken").val();
+        var input_refreshToken = $("#refreshToken").val();
+
+        $.ajax({
+                url: '/user/join',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    id : input_inputId,
+                    name : input_inputName,
+                    pwd : input_inputPwd,
+                    use_num : input_userUsingNum,
+                    accessToken : input_accessToken,
+                    refreshToken : input_refreshToken
+                },
+                success: function (data) {
+                    alert("회원가입완료");
+                }
+            }
+        );
+
+
+    })
+
+    function invokeAuthorize(){
+        //샘플코드가 어려워 쉬운코드로 대체
+        var queryParameter =
+            "response_type=code&"+ //기본적으로 code 입력
+            "client_id=l7xx23d0eab10525490aa3956398ecceaafe&"+ //금융API에서 받은 Api 아이디 입력
+            "redirect_uri=http://localhost:3000/authResult&"+ // 금융API에서 설정한 callback URL 입력
+            "scope=login inquiry transfer&"+ // 사용자에게 요청할 권한 설정 : login - 로그인 권한 , inquiry - 조회 권한, transfer - 계좌 이체 권한
+            "auth_type=0&"+ // 최소사용자 인증시
+            "lang=kor&" + // 언어설정
+            "invoke_type=ajax"  //Redirection 응답을 JSON file 로 받기위한 설정
+
+        $.ajax({ //nodejs request module과 같은 역할을 하는 Jquery 메서드입니다.
+            url: 'https://testapi.open-platform.or.kr/oauth/2.0/authorize2?'+queryParameter, // 주소는 테스트 URL 을 사용했습니다.
+            type: 'get',
+            data: {}
+        })
+            .done(function(data, textStatus, jqXHR){
+                console.log(data);
+                window.name = "parents"
+                var tmpWin = window.open('about:blank'); // 새창을 여는 코드 입니다.
+                tmpWin.location.href = data.location; // 새창의 주소를 변경하는 코드입니다.
+            });
+    }
+
+</script>
 <% include ./hf/footer.ejs %>
