@@ -46,7 +46,7 @@
                         <input id="userNum" type="text" placeholder="할당된 이용자번호">
                     </div>
                       <div class="clear"></div>
-                    <a id="joinBtn" class="button button-full button-m shadow-large button-round-small bg-green1-dark top-10 bottom-0">가입</a>
+                    <button id="joinBtn" class="button button-full button-m shadow-large button-round-small bg-green1-dark top-10 bottom-0">가입</button>
                 </div>
             </div>
         </div>
@@ -66,12 +66,13 @@
         var input_accessToken = $("#accessToken").val();
         var input_refreshToken = $("#refreshToken").val();
 
+        console.log(input_inputId,input_inputName,input_inputPwd );
         $.ajax({
-                url: '/user/join',
+                url: '/join',
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    id : input_inputId,
+                    userId : input_inputId,
                     name : input_inputName,
                     pwd : input_inputPwd,
                     use_num : input_userUsingNum,
@@ -79,36 +80,55 @@
                     refreshToken : input_refreshToken
                 },
                 success: function (data) {
-                    alert("회원가입완료");
+                    if(data == 1){
+                        alert("회원가입완료");
+                    }
                 }
             }
         );
-
-
     })
 
     function invokeAuthorize(){
-        //샘플코드가 어려워 쉬운코드로 대체
-        var queryParameter =
-            "response_type=code&"+ //기본적으로 code 입력
-            "client_id=l7xx23d0eab10525490aa3956398ecceaafe&"+ //금융API에서 받은 Api 아이디 입력
-            "redirect_uri=http://localhost:3000/authResult&"+ // 금융API에서 설정한 callback URL 입력
-            "scope=login inquiry transfer&"+ // 사용자에게 요청할 권한 설정 : login - 로그인 권한 , inquiry - 조회 권한, transfer - 계좌 이체 권한
-            "auth_type=0&"+ // 최소사용자 인증시
-            "lang=kor&" + // 언어설정
-            "invoke_type=ajax"  //Redirection 응답을 JSON file 로 받기위한 설정
 
-        $.ajax({ //nodejs request module과 같은 역할을 하는 Jquery 메서드입니다.
-            url: 'https://testapi.open-platform.or.kr/oauth/2.0/authorize2?'+queryParameter, // 주소는 테스트 URL 을 사용했습니다.
-            type: 'get',
-            data: {}
-        })
-            .done(function(data, textStatus, jqXHR){
-                console.log(data);
-                window.name = "parents"
-                var tmpWin = window.open('about:blank'); // 새창을 여는 코드 입니다.
-                tmpWin.location.href = data.location; // 새창의 주소를 변경하는 코드입니다.
-            });
+
+        var qs =
+            "?response_type=code&" +
+            "client_id=l7xx73c56691972e409bb055dff2c898d029&" +
+            "redirect_uri=http://127.0.0.1:3000/authResult&" +
+            "scope=login inquiry transfer&"+
+            "auth_type=0&"+
+            "invoke_type=ajax"
+            $.ajax({
+                url : 'https://testapi.open-platform.or.kr/oauth/2.0/authorize2'+qs,
+                type : 'get',
+                data : {},
+            }).done(function(result){
+                window.name = "parents";
+                var tmpwin = window.open("about:blank");
+                tmpwin.location.href = result.location
+            })
+
+        // //샘플코드가 어려워 쉬운코드로 대체
+        // var queryParameter =
+        //     "response_type=code&"+ //기본적으로 code 입력
+        //     "client_id=l7xxbe510804f7284259b6734d9236d51b67&"+ //금융API에서 받은 Api 아이디 입력
+        //     "redirect_uri=http://127.0.0.1:3000/authResult&"+ // 금융API에서 설정한 callback URL 입력
+        //     "scope=inquiry&"+ //oob : 입금이체, 이체결과조회,이체API처리조회,계좌실명조회,참가은행상태조회 (기관인증) 사용자에게 요청할 권한 설정 : login - 로그인 권한 , inquiry - 조회 권한, transfer - 계좌 이체 권한
+        //     "auth_type=0&"+ // 최소사용자 인증시
+        //     "lang=kor&" + // 언어설정
+        //     "invoke_type=ajax"  //Redirection 응답을 JSON file 로 받기위한 설정
+        //
+        // $.ajax({ //nodejs request module과 같은 역할을 하는 Jquery 메서드입니다.
+        //     url: 'https://testapi.open-platform.or.kr/oauth/2.0/authorize2?'+queryParameter, // 주소는 테스트 URL 을 사용했습니다.
+        //     type: 'get',
+        //     data: {}
+        // })
+        //     .done(function(data, textStatus, jqXHR){
+        //         console.log(data);
+        //         window.name = "parents"
+        //         var tmpWin = window.open('about:blank'); // 새창을 여는 코드 입니다.
+        //         tmpWin.location.href = data.location; // 새창의 주소를 변경하는 코드입니다.
+        //     });
     }
 
 </script>

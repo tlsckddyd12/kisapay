@@ -10,10 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.6.1",
+    "cors": "^2.8.5",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "instascan": "^1.0.0",
+    "moment": "^2.24.0",
     "mysql": "^2.16.0",
     "request": "^2.88.0"
   }
